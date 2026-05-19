@@ -2,56 +2,78 @@ package com.universidad.productos_service.service;
 
 import com.universidad.productos_service.domain.Producto;
 import com.universidad.productos_service.repository.ProductoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProductoService {
 
-    @Autowired
-    private ProductoRepository repo;
+    private final ProductoRepository productoRepository;
 
-    public Producto procesarProducto(String n,
-                                     Double p,
-                                     Integer s,
-                                     String cat,
-                                     boolean activo,
-                                     String proveedor) {
-
-        Producto producto = new Producto();
-
-        if (n == null || n.equals("")) {
-            throw new IllegalArgumentException("nombre requerido");
-        }
-
-        if (p == null) {
-            throw new IllegalArgumentException("precio requerido");
-
-        } else if (p <= 0) {
-            throw new IllegalArgumentException("precio invalido");
-
-        } else if (p > 999999) {
-            throw new IllegalArgumentException("precio excesivo");
-        }
-
-        if (s == null || s < 0) {
-            throw new IllegalArgumentException("stock invalido");
-        }
-
-        producto.setNombre(n);
-        producto.setPrecio(p);
-        producto.setStock(s);
-
-        return repo.save(producto);
+    public ProductoService(ProductoRepository productoRepository) {
+        this.productoRepository = productoRepository;
     }
 
     public List<Producto> listar() {
-        return repo.findAll();
+        return productoRepository.findAll();
     }
 
     public Producto buscar(Long id) {
-        return repo.findById(id).orElse(null);
+
+        return productoRepository.findById(id)
+                .orElseThrow(() ->
+                        new NoSuchElementException(
+                                "Producto no encontrado: " + id
+                        ));
+    }
+
+    public Producto procesarProducto(
+            String nombre,
+            Double precio,
+            Integer stock
+    ) {
+
+        validarDatos(nombre, precio, stock);
+
+        Producto producto = new Producto();
+
+        producto.setNombre(nombre.strip());
+        producto.setPrecio(precio);
+        producto.setStock(stock);
+
+        return productoRepository.save(producto);
+    }
+
+    private void validarDatos(
+            String nombre,
+            Double precio,
+            Integer stock
+    ) {
+
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException(
+                    "El nombre no puede estar vacío"
+            );
+        }
+
+        if (precio == null || precio <= 0) {
+            throw new IllegalArgumentException(
+                    "El precio debe ser mayor a cero"
+            );
+        }
+
+        if (precio > 999999) {
+            throw new IllegalArgumentException(
+                    "El precio excede el máximo permitido"
+            );
+        }
+
+        if (stock == null || stock < 0) {
+            throw new IllegalArgumentException(
+                    "El stock no puede ser negativo"
+            );
+        }
     }
 }
