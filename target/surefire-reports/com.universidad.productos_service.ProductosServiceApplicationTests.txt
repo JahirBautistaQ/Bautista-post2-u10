@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.universidad.productos_service.ProductosServiceApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.48 s -- in com.universidad.productos_service.ProductosServiceApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.671 s -- in com.universidad.productos_service.ProductosServiceApplicationTests
