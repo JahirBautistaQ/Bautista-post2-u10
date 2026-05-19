@@ -1,0 +1,4 @@
+com\universidad\productos_service\ProductosServiceApplication.class
+com\universidad\productos_service\service\ProductoService.class
+com\universidad\productos_service\domain\Producto.class
+com\universidad\productos_service\repository\ProductoRepository.class
